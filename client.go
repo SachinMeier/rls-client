@@ -30,7 +30,7 @@ type Client interface {
 	// GetSubscribedWebhook queries subscribed webhook
 	GetSubscribedWebhook() (*Webhook, error)
 	// DeleteWebhook deletes the existing webhook
-	DeleteWebhook() bool
+	DeleteWebhook() error
 	// DecodeInvoice decodes a Lightning Invoice using RLS using `lncli decodepayreq`
 	DecodeInvoice(invoice string) (*DecodedInvoice, error)
 	// EstimateLightningFee estimates Lightning Fee of an invoice using `lncli`
