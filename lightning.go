@@ -23,57 +23,57 @@ type FeeEstimate struct {
 }
 
 // DecodeInvoice decodes a Lightning Invoice using RLS using `lncli decodepayreq`
-func (rls *RLSClient) DecodeInvoice(invoice string) (DecodedInvoice, error) {
+func (rls *RLSClient) DecodeInvoice(invoice string) (*DecodedInvoice, error) {
 	data := map[string]string{
 		"destination": invoice,
 	}
 
 	body, err := json.Marshal(data)
 	if err != nil {
-		return DecodedInvoice{}, err
+		return nil, err
 	}
 
 	req, err := http.NewRequest(
-		"PUT",
+		http.MethodPut,
 		fmt.Sprintf("%s/lightning/parse_invoice", rls.BaseURL()),
 		bytes.NewBuffer(body),
 	)
 	if err != nil {
-		return DecodedInvoice{}, err
+		return nil, err
 	}
 
 	var decodedInvoice DecodedInvoice
 	err = rls.sendRequest(req, &decodedInvoice)
 	if err != nil {
-		return DecodedInvoice{}, err
+		return nil, err
 	}
-	return decodedInvoice, nil
+	return &decodedInvoice, nil
 }
 
 // EstimateLightningFee estimates Lightning Fee of an invoice using `lncli`
-func (rls *RLSClient) EstimateLightningFee(invoice string, amount int64) (FeeEstimate, error) {
+func (rls *RLSClient) EstimateLightningFee(invoice string, amount int64) (*FeeEstimate, error) {
 	data := map[string]string{
 		"destination": invoice,
 	}
 
 	body, err := json.Marshal(data)
 	if err != nil {
-		return FeeEstimate{}, err
+		return nil, err
 	}
 
 	req, err := http.NewRequest(
-		"PUT",
+		http.MethodPut,
 		fmt.Sprintf("%s/lightning/estimate_fee/", rls.BaseURL()),
 		bytes.NewBuffer(body),
 	)
 	if err != nil {
-		return FeeEstimate{}, err
+		return nil, err
 	}
 
 	var feeEstimate FeeEstimate
 	err = rls.sendRequest(req, &feeEstimate)
 	if err != nil {
-		return FeeEstimate{}, err
+		return nil, err
 	}
-	return feeEstimate, nil
+	return &feeEstimate, nil
 }

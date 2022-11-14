@@ -5,6 +5,7 @@ import (
 	"net/http"
 )
 
+// CurrencyBalance represents a balance in a specific currency. Currently unused
 type CurrencyBalance struct {
 	Currency     string `json:"currency"`
 	Amount       int64  `json:"amount"`
@@ -25,17 +26,16 @@ func (as *Account) GetReservedBalance() int64 {
 }
 
 // GetAccount returns a  of the account's balance and available balance
-func (rls *RLSClient) GetAccount() (Account, error) {
-	var acct Account
-
+func (rls *RLSClient) GetAccount() (*Account, error) {
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s/accounts/%s/", rls.BaseURL(), rls.AccountID()), nil)
 	if err != nil {
-		return acct, err
+		return nil, err
 	}
 
+	var acct Account
 	err = rls.sendRequest(req, &acct)
 	if err != nil {
-		return acct, err
+		return nil, err
 	}
-	return acct, nil
+	return &acct, nil
 }

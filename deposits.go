@@ -48,11 +48,11 @@ func (rls *RLSClient) GetDeposit(depositID string) (*Deposit, error) {
 }
 
 // GetDeposits returns a list of deposits (settled invoices) to RLS
-func (rls *RLSClient) GetDeposits(limit, nextTimestamp int64) (DepositList, error) {
+func (rls *RLSClient) GetDeposits(limit, nextTimestamp int64) (*DepositList, error) {
 	url := fmt.Sprintf("%s/accounts/%s/deposits", rls.BaseURL(), rls.AccountID())
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
-		return DepositList{}, err
+		return nil, err
 	}
 
 	// Add query params
@@ -66,7 +66,7 @@ func (rls *RLSClient) GetDeposits(limit, nextTimestamp int64) (DepositList, erro
 	var deposits DepositList
 	err = rls.sendRequest(req, &deposits)
 	if err != nil {
-		return DepositList{}, err
+		return nil, err
 	}
-	return deposits, nil
+	return &deposits, nil
 }

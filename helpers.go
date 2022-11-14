@@ -13,7 +13,6 @@ func (rls *RLSClient) setHeaders(req *http.Request) {
 	req.Header.Set("Content-Type", "application/json; charset-utf-8")
 	req.Header.Set("Accept", "application/json; charset-utf-8")
 	req.Header.Set("Authorization", fmt.Sprintf("basic %s", rls.Credential()))
-	req.Header.Set("rls-version", rls.APIVersion())
 }
 
 // handleResponse handles HTTP responses and unmarshals JSON to the appropriate object
