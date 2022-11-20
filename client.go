@@ -40,12 +40,15 @@ type Client interface {
 	// GetSubscribedWebhook queries subscribed webhook
 	GetSubscribedWebhook() (*Webhook, error)
 	// DeleteWebhook deletes the existing webhook
-	DeleteWebhook() error
+	DeleteWebhook(callbackURL string) error
 	// DecodeInvoice decodes a Lightning Invoice using RLS using `lncli decodepayreq`
 	DecodeInvoice(invoice string) (*DecodedInvoice, error)
 	// EstimateLightningFee estimates Lightning Fee of an invoice using `lncli`
 	EstimateLightningFee(invoice string, amount int64) (*FeeEstimate, error)
 }
+
+// Compile-time check that RLSClient implements Client interface
+var _ Client = &RLSClient{}
 
 // RLSClient is the client for the RLS API
 // RLSClient implements Client

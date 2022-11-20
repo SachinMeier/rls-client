@@ -15,7 +15,7 @@ import (
 // Webhook contains the response from a webhook call
 type Webhook struct {
 	URL     string `json:"url"`
-	Secret  string `json:"secret" default:""`
+	Secret  string `json:"secret,omitempty" default:""`
 	Enabled bool   `json:"enabled"`
 }
 
@@ -49,11 +49,19 @@ func (rls *RLSClient) GetSubscribedWebhook() (*Webhook, error) {
 }
 
 // DeleteWebhook deletes the existing webhook
-func (rls *RLSClient) DeleteWebhook() error {
+func (rls *RLSClient) DeleteWebhook(callbackURL string) error {
+	data := map[string]string{
+		"url": callbackURL,
+	}
+	body, err := json.Marshal(data)
+	if err != nil {
+		return err
+	}
+
 	req, err := http.NewRequest(
 		http.MethodDelete,
 		fmt.Sprintf("%s/accounts/%s/webhooks", rls.BaseURL(), rls.AccountID()),
-		nil,
+		bytes.NewBuffer(body),
 	)
 	if err != nil {
 		return err
