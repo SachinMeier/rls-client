@@ -39,7 +39,7 @@ func (rls *RLSClient) SubscribeToWebhook(callbackURL string) (*Webhook, error) {
 func (rls *RLSClient) GetSubscribedWebhook() (*Webhook, error) {
 	req, err := http.NewRequest(
 		http.MethodGet,
-		fmt.Sprintf("%s/accounts/%s/webhooks/", rls.BaseURL(), rls.AccountID()),
+		fmt.Sprintf("%s/accounts/%s/webhooks", rls.BaseURL(), rls.AccountID()),
 		nil,
 	)
 	return rls.handleWebhookRequest(req, err)
