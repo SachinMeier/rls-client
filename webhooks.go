@@ -2,6 +2,9 @@ package rls
 
 import (
 	"bytes"
+	"crypto/hmac"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -83,9 +86,32 @@ const (
 	WebhookStateFail    string = "FAIL"
 )
 
-// RLSWebhookMessage represents a webhook event sent from RLS
-type RLSWebhookMessage struct {
+// WebhookEvent represents a webhook event sent from RLS
+type WebhookEvent struct {
 	ID    string `json:"id"`
 	Type  string `json:"type"`
 	State string `json:"state"`
+}
+
+type WebhookHeader struct {
+	Timestamp string `json:"timestamp"`
+	Signature string `json:"signature"`
+}
+
+func VerifyWebhookSignature(secret string, event string, header *WebhookHeader) error {
+	payload := fmt.Sprintf("%s.%s", header.Timestamp, event)
+	// Create SHA256 HMAC
+	key, err := hex.DecodeString(secret)
+	if err != nil {
+		return fmt.Errorf("failed to verify webhook signature : failed to decode secret : %w", err)
+	}
+	hash := hmac.New(sha256.New, key)
+	hash.Write([]byte(payload))
+
+	sig := hash.Sum(nil)
+
+	if !hmac.Equal([]byte(header.Signature), sig) {
+		return fmt.Errorf("webhook signature failed validation : %w", err)
+	}
+	return nil
 }
