@@ -49,7 +49,7 @@ func (rls *RLSClient) GetSubscribedWebhook() (*Webhook, error) {
 func (rls *RLSClient) DeleteWebhook() error {
 	req, err := http.NewRequest(
 		http.MethodDelete,
-		fmt.Sprintf("%s/accounts/%s/webhooks/", rls.BaseURL(), rls.AccountID()),
+		fmt.Sprintf("%s/accounts/%s/webhooks", rls.BaseURL(), rls.AccountID()),
 		nil,
 	)
 	if err != nil {
