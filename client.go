@@ -7,6 +7,16 @@ import (
 	"time"
 )
 
+const (
+	// NetworkLN represents the Lightning Network
+	NetworkLN = "LN"
+	// NetworkBTC represents the Bitcoin blockchain network
+	NetworkBTC = "BTC"
+
+	// CurrencyBTC represents Bitcoin currency, denominated in satoshis
+	CurrencyBTC = "BTC"
+)
+
 // Client is the interface of a RLS API Client
 type Client interface {
 	// Ping does ping pong with the API server at /

@@ -78,6 +78,8 @@ func (rls *RLSClient) handleWebhookRequest(req *http.Request, err error) (*Webho
 // Webhook Events
 
 const (
+	WebhookHeaderKey string = "River-Signature"
+
 	WebhookTypeDeposit    string = "DEPOSIT"
 	WebhookTypeWithdrawal string = "WITHDRAWAL"
 
