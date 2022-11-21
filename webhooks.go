@@ -125,3 +125,7 @@ func VerifyWebhookSignature(secret string, event string, header *WebhookHeader) 
 	}
 	return nil
 }
+
+func (client *RLSClient) VerifyWebhookSignature(event string, header *WebhookHeader) error {
+	return VerifyWebhookSignature(client.cfg.WebhookSecret, event, header)
+}
