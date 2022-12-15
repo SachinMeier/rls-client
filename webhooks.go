@@ -115,13 +115,16 @@ func VerifyWebhookSignature(secret string, event string, header *WebhookHeader) 
 	if err != nil {
 		return fmt.Errorf("failed to verify webhook signature : failed to decode secret : %w", err)
 	}
+	rlsSig, err := hex.DecodeString(header.Signature)
+	if err != nil {
+		return fmt.Errorf("failed to decode rls signature : %w", err)
+	}
 	hash := hmac.New(sha256.New, key)
 	hash.Write([]byte(payload))
-
 	sig := hash.Sum(nil)
 
-	if !hmac.Equal([]byte(header.Signature), sig) {
-		return fmt.Errorf("webhook signature failed validation : %w", err)
+	if !hmac.Equal(rlsSig, sig) {
+		return fmt.Errorf("webhook signature failed validation")
 	}
 	return nil
 }

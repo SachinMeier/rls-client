@@ -27,9 +27,9 @@ func main() {
 	app.Usage = "River Financial's Enterprise Lightning API"
 	app.Commands = []cli.Command{
 		getAccountSummary,
-		newDepositInvoice,
+		newInvoice,
 		getDeposit,
-		initiateWithdrawal,
+		newWithdrawal,
 		getWithdrawal,
 		newWebhook,
 		rmWebhook,
@@ -49,7 +49,7 @@ var getAccountSummary = cli.Command{
 	Action: cliGetAccountSummary,
 }
 
-var newDepositInvoice = cli.Command{
+var newInvoice = cli.Command{
 	Name:      "newinvoice",
 	Category:  "Deposits",
 	Usage:     "Requests a new invoice from RLS",
@@ -73,10 +73,10 @@ var newDepositInvoice = cli.Command{
 	},
 	Description: `
 	Requests a new invoice from RLS.`,
-	Action: cliCreateDepositInvoice,
+	Action: cliNewInvoice,
 }
 
-var initiateWithdrawal = cli.Command{
+var newWithdrawal = cli.Command{
 	Name:      "newwithdrawal",
 	Category:  "Withdrawals",
 	Usage:     "Requests a payment to the specified invoice from RLS",
@@ -111,7 +111,7 @@ var initiateWithdrawal = cli.Command{
 	Description: `
 	Requests a payment to the specified invoice from RLS.
 	`,
-	Action: cliInitiateWithdrawal,
+	Action: cliNewWithdrawal,
 }
 
 var getWithdrawal = cli.Command{

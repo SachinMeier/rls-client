@@ -24,7 +24,7 @@ func cliGetAccountSummary(ctx *cli.Context) error {
 	return nil
 }
 
-func cliCreateDepositInvoice(ctx *cli.Context) error {
+func cliNewInvoice(ctx *cli.Context) error {
 	client, err := NewRLSClient(context.Background())
 	if err != nil {
 		return err
@@ -66,7 +66,7 @@ func cliCreateDepositInvoice(ctx *cli.Context) error {
 	return nil
 }
 
-func cliInitiateWithdrawal(ctx *cli.Context) error {
+func cliNewWithdrawal(ctx *cli.Context) error {
 	client, err := NewRLSClient(context.Background())
 	if err != nil {
 		return err
