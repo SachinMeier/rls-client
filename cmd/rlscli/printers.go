@@ -6,12 +6,12 @@ import (
 	"github.com/SachinMeier/rls-client"
 )
 
-func printAccountSummary(acct *rls.Account) {
-	fmt.Printf("--- Account Summary: %s ---\n", acct.ID)
+func printAccount(acct *rls.Account) {
+	fmt.Printf("--- Account: %s ---\n", acct.ID)
 	fmt.Printf("  Total Balance:     %d sats\n", acct.Balance)
 	fmt.Printf("  Available Balance: %d sats\n", acct.AvailableBalance)
 	fmt.Printf("  Reserved Balance:  %d sats\n", acct.GetReservedBalance())
-	fmt.Printf("-------------------------------------\n")
+	fmt.Printf("-----------------------------\n")
 }
 
 func printDepositInvoice(inv *rls.Invoice) {
@@ -40,4 +40,14 @@ func printDeposit(dep *rls.Deposit) {
 	fmt.Printf("  Invoice ID: %s\n", dep.Invoice.ID)
 	fmt.Printf("  Invoice:    %s\n", dep.Invoice.Invoice)
 	fmt.Printf("-------------------------------------\n")
+}
+
+func printWebhook(wh *rls.Webhook) {
+	fmt.Printf("--- Webhook ---\n")
+	fmt.Printf("  Enabled: %v\n", wh.Enabled)
+	fmt.Printf("  URL:     %s\n", wh.URL)
+	if wh.Secret != "" {
+		fmt.Printf("  Secret:  %s\n", wh.Secret)
+	}
+	fmt.Printf("---------------\n")
 }
