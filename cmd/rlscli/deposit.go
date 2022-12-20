@@ -126,3 +126,64 @@ func cliGetDeposit(ctx *cli.Context) error {
 	printDeposit(dep)
 	return nil
 }
+
+var listDeposits = cli.Command{
+	Name:      "listdeposits",
+	Category:  "Deposits",
+	Usage:     "Queries list of settled deposits",
+	ArgsUsage: fmt.Sprintf("%s %s", flagLimit, flagNextTimestamp),
+	Flags: []cli.Flag{
+		cli.StringFlag{
+			Name:     flagLimit,
+			Usage:    "Number of results to return per page (1..25)",
+			Required: false,
+		},
+		cli.StringFlag{
+			Name:     flagNextTimestamp,
+			Usage:    "UNIX timestamp of next deposit to return",
+			Required: false,
+		},
+	},
+	Description: `
+	Queries a payment based on the deposit_id.
+	`,
+	Action: cliListDeposits,
+}
+
+func cliListDeposits(ctx *cli.Context) error {
+	client, err := NewRLSClient(context.Background())
+	if err != nil {
+		return err
+	}
+
+	var limit, nextTimestamp int64
+
+	args := ctx.Args()
+
+	if ctx.IsSet(flagLimit) {
+		limit = ctx.Int64(flagLimit)
+	} else if args.Present() {
+		limit, err = strconv.ParseInt(args.First(), 10, 64)
+		if err != nil {
+			return fmt.Errorf("unable to parse limit as int64 : %w", err)
+		}
+	}
+
+	if ctx.IsSet(flagNextTimestamp) {
+		nextTimestamp = ctx.Int64(flagNextTimestamp)
+	} else if args.Present() {
+		nextTimestamp, err = strconv.ParseInt(args.First(), 10, 64)
+		if err != nil {
+			return fmt.Errorf("unable to parse nextTimestamp as int64 : %w", err)
+		}
+	}
+
+	deps, err := client.GetDeposits(limit, nextTimestamp)
+	if err != nil {
+		return fmt.Errorf("failed to list deposits : %w", err)
+	}
+	for _, deposit := range deps.Deposits {
+		printDeposit(&deposit)
+	}
+	return nil
+}

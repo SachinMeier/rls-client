@@ -8,15 +8,17 @@ import (
 )
 
 const (
-	flagAmt          = "amt"
-	flagLabel        = "label"
-	flagNetwork      = "network"
-	flagInvoice      = "invoice"
-	flagFeeLimit     = "fee_limit"
-	flagWithdrawalID = "withdrawal_id"
-	flagDepositID    = "deposit_id"
-	flagCurrency     = "currency"
-	flagURL          = "url"
+	flagAmt           = "amt"
+	flagLabel         = "label"
+	flagNetwork       = "network"
+	flagInvoice       = "invoice"
+	flagFeeLimit      = "fee_limit"
+	flagWithdrawalID  = "withdrawal_id"
+	flagDepositID     = "deposit_id"
+	flagCurrency      = "currency"
+	flagURL           = "url"
+	flagLimit         = "limit"
+	flagNextTimestamp = "next"
 
 	networkLN = "LN"
 )
@@ -29,6 +31,7 @@ func main() {
 		getAccount,
 		newInvoice,
 		getDeposit,
+		listDeposits,
 		newWithdrawal,
 		getWithdrawal,
 		newWebhook,
