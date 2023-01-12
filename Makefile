@@ -1,7 +1,8 @@
 cli:
 	@go build -o rlscli cmd/rlscli/*.go
 
-install: all
+.PHONY: install
+install: cli
 	@cp rlscli ${GOBIN}/rlscli
 
 .PHONY: test

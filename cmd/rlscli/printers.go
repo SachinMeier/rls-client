@@ -42,6 +42,14 @@ func printDeposit(dep *rls.Deposit) {
 	fmt.Printf("-------------------------------------\n")
 }
 
+func printDepositList(deps *rls.DepositList) {
+	for _, deposit := range deps.Deposits {
+		printDeposit(&deposit)
+	}
+	fmt.Printf("Next Timestamp: %d\n", deps.NextTimestamp)
+	fmt.Printf("-------------------------------------\n")
+}
+
 func printWebhook(wh *rls.Webhook) {
 	fmt.Printf("--- Webhook ---\n")
 	fmt.Printf("  Enabled: %v\n", wh.Enabled)

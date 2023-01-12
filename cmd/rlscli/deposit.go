@@ -133,12 +133,13 @@ var listDeposits = cli.Command{
 	Usage:     "Queries list of settled deposits",
 	ArgsUsage: fmt.Sprintf("%s %s", flagLimit, flagNextTimestamp),
 	Flags: []cli.Flag{
-		cli.StringFlag{
+		cli.Int64Flag{
 			Name:     flagLimit,
 			Usage:    "Number of results to return per page (1..25)",
 			Required: false,
+			Value:    25,
 		},
-		cli.StringFlag{
+		cli.Int64Flag{
 			Name:     flagNextTimestamp,
 			Usage:    "UNIX timestamp of next deposit to return",
 			Required: false,
@@ -156,7 +157,8 @@ func cliListDeposits(ctx *cli.Context) error {
 		return err
 	}
 
-	var limit, nextTimestamp int64
+	var limit int64 = 25
+	var nextTimestamp int64
 
 	args := ctx.Args()
 
@@ -164,9 +166,11 @@ func cliListDeposits(ctx *cli.Context) error {
 		limit = ctx.Int64(flagLimit)
 	} else if args.Present() {
 		limit, err = strconv.ParseInt(args.First(), 10, 64)
+		fmt.Printf("read limit from args: %d", limit)
 		if err != nil {
 			return fmt.Errorf("unable to parse limit as int64 : %w", err)
 		}
+		args = args.Tail()
 	}
 
 	if ctx.IsSet(flagNextTimestamp) {
@@ -182,8 +186,6 @@ func cliListDeposits(ctx *cli.Context) error {
 	if err != nil {
 		return fmt.Errorf("failed to list deposits : %w", err)
 	}
-	for _, deposit := range deps.Deposits {
-		printDeposit(&deposit)
-	}
+	printDepositList(deps)
 	return nil
 }
