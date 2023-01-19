@@ -16,11 +16,13 @@ type WithdrawalDetail struct {
 
 // Withdrawal contains the result of a call that returns a withdrawal
 type Withdrawal struct {
-	Amount   int64            `json:"amount"`
-	Currency string           `json:"currency"`
-	Details  WithdrawalDetail `json:"withdrawal_details"`
-	State    string           `json:"state,omitempty"`
-	ID       string           `json:"id,omitempty"`
+	Amount    int64            `json:"amount"`
+	Currency  string           `json:"currency"`
+	Details   WithdrawalDetail `json:"withdrawal_details"`
+	State     string           `json:"state,omitempty"`
+	ID        string           `json:"id,omitempty"`
+	FeePaid   int64            `json:"fee_paid"`
+	Timestamp int64            `json:"timestamp"`
 }
 
 // Invoice returns Withdrawal Invoice string

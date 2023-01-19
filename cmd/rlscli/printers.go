@@ -28,6 +28,8 @@ func printWithdrawal(wd *rls.Withdrawal) {
 	fmt.Printf("  State:            %s\n", wd.State)
 	fmt.Printf("  Invoice: %s\n", wd.Invoice())
 	fmt.Printf("  Fee Limit: %d\n", wd.FeeLimit())
+	fmt.Printf("  Fee Paid: %d\n", wd.FeePaid)
+	fmt.Printf("  Timestamp: %d\n", wd.Timestamp)
 	fmt.Printf("-------------------------------------\n")
 }
 
