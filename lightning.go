@@ -15,6 +15,11 @@ type DecodedInvoice struct {
 	Invoice string `json:"destination"`
 }
 
+type FeeEstimateRequest struct {
+	Destination string `json:"destination"`
+	Amount      int64  `json:"amount"`
+}
+
 // FeeEstimate contains the result of a call to EstimateFee
 type FeeEstimate struct {
 	Amount  int64  `json:"amount"`
@@ -52,18 +57,19 @@ func (rls *RLSClient) DecodeInvoice(invoice string) (*DecodedInvoice, error) {
 
 // EstimateLightningFee estimates Lightning Fee of an invoice using `lncli`
 func (rls *RLSClient) EstimateLightningFee(invoice string, amount int64) (*FeeEstimate, error) {
-	data := map[string]string{
-		"destination": invoice,
+	feeEstimateReq := FeeEstimateRequest{
+		Destination: invoice,
+		Amount:      amount,
 	}
 
-	body, err := json.Marshal(data)
+	body, err := json.Marshal(feeEstimateReq)
 	if err != nil {
 		return nil, err
 	}
 
 	req, err := http.NewRequest(
 		http.MethodPut,
-		fmt.Sprintf("%s/lightning/estimate_fee/", rls.BaseURL()),
+		fmt.Sprintf("%s/lightning/estimate_fee", rls.BaseURL()),
 		bytes.NewBuffer(body),
 	)
 	if err != nil {

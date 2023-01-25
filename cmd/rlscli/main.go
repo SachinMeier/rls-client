@@ -51,6 +51,8 @@ func main() {
 		newWebhook,
 		getWebhook,
 		rmWebhook,
+		parseInvoice,
+		estimateLightningFee,
 	}
 
 	if err := app.Run(os.Args); err != nil {

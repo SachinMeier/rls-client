@@ -61,3 +61,20 @@ func printWebhook(wh *rls.Webhook) {
 	}
 	fmt.Printf("---------------\n")
 }
+
+func printInvoice(invoice *rls.DecodedInvoice) {
+	fmt.Printf("--- Invoice ---\n")
+	fmt.Printf("  Amount: %d\n", invoice.Amount)
+	fmt.Printf("  Destination: %s\n", invoice.NodeID)
+	fmt.Printf("  Memo: %s\n", invoice.Memo)
+	// fmt.Printf("  Invoice: %s\n", invoice.Invoice)
+	fmt.Printf("---------------\n")
+}
+
+func printFeeEstimate(feeEstimate *rls.FeeEstimate) {
+	fmt.Printf("--- Fee Estimate ---\n")
+	fmt.Printf("  Fee Estimate: %d\n", feeEstimate.Fee)
+	fmt.Printf("  Amount: %d\n", feeEstimate.Amount)
+	// fmt.Printf("  Invoice: %s\n", feeEstimate.Invoice)
+	fmt.Printf("---------------\n")
+}
