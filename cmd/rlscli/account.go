@@ -17,7 +17,7 @@ var getAccount = cli.Command{
 }
 
 func cliGetAccount(ctx *cli.Context) error {
-	client, err := NewRLSClient(context.Background())
+	client, err := NewRLSClient(context.Background(), ctx)
 	if err != nil {
 		return err
 	}

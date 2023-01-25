@@ -27,7 +27,7 @@ func (as *Account) GetReservedBalance() int64 {
 
 // GetAccount returns a  of the account's balance and available balance
 func (rls *RLSClient) GetAccount() (*Account, error) {
-	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s/accounts/%s/", rls.BaseURL(), rls.AccountID()), nil)
+	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s/accounts/%s", rls.BaseURL(), rls.AccountID()), nil)
 	if err != nil {
 		return nil, err
 	}

@@ -48,7 +48,7 @@ var newWithdrawal = cli.Command{
 }
 
 func cliNewWithdrawal(ctx *cli.Context) error {
-	client, err := NewRLSClient(context.Background())
+	client, err := NewRLSClient(context.Background(), ctx)
 	if err != nil {
 		return err
 	}
@@ -121,7 +121,7 @@ var getWithdrawal = cli.Command{
 }
 
 func cliGetWithdrawal(ctx *cli.Context) error {
-	client, err := NewRLSClient(context.Background())
+	client, err := NewRLSClient(context.Background(), ctx)
 	if err != nil {
 		return err
 	}

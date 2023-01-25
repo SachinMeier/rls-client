@@ -21,8 +21,8 @@ type Withdrawal struct {
 	Details   WithdrawalDetail `json:"withdrawal_details"`
 	State     string           `json:"state,omitempty"`
 	ID        string           `json:"id,omitempty"`
-	FeePaid   int64            `json:"fee_paid"`
-	Timestamp int64            `json:"timestamp"`
+	FeePaid   int64            `json:"fee_paid,omitempty"`
+	Timestamp int64            `json:"timestamp,omitempty"`
 }
 
 // Invoice returns Withdrawal Invoice string

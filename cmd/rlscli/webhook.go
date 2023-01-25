@@ -26,7 +26,7 @@ var newWebhook = cli.Command{
 }
 
 func cliNewWebhook(ctx *cli.Context) error {
-	client, err := NewRLSClient(context.Background())
+	client, err := NewRLSClient(context.Background(), ctx)
 	if err != nil {
 		return err
 	}
@@ -62,7 +62,7 @@ var getWebhook = cli.Command{
 }
 
 func cliGetWebhook(ctx *cli.Context) error {
-	client, err := NewRLSClient(context.Background())
+	client, err := NewRLSClient(context.Background(), ctx)
 	if err != nil {
 		return err
 	}
@@ -82,6 +82,11 @@ var rmWebhook = cli.Command{
 	ArgsUsage: flagURL,
 	Flags: []cli.Flag{
 		cli.StringFlag{
+			Name:     flagTLSPath,
+			Usage:    "if set, loads TLS key and cert from <tlsPath>.key and <tlsPath>.cert and uses them in the HTTPS request",
+			Required: false,
+		},
+		cli.StringFlag{
 			Name:     flagURL,
 			Usage:    "Webhook URL",
 			Required: false,
@@ -94,7 +99,7 @@ var rmWebhook = cli.Command{
 }
 
 func cliDeleteWebhook(ctx *cli.Context) error {
-	client, err := NewRLSClient(context.Background())
+	client, err := NewRLSClient(context.Background(), ctx)
 	if err != nil {
 		return err
 	}

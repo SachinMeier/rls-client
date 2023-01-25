@@ -10,6 +10,9 @@ import (
 
 // setHeaders sets the headers for all HTTP requests
 func (rls *RLSClient) setHeaders(req *http.Request) {
+	for k, v := range rls.cfg.ExtraHeaders {
+		req.Header.Set(k, v)
+	}
 	req.Header.Set("Content-Type", "application/json; charset-utf-8")
 	req.Header.Set("Accept", "application/json; charset-utf-8")
 	req.Header.Set("Authorization", fmt.Sprintf("basic %s", rls.Credential()))

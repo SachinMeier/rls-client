@@ -36,7 +36,7 @@ var newInvoice = cli.Command{
 }
 
 func cliNewInvoice(ctx *cli.Context) error {
-	client, err := NewRLSClient(context.Background())
+	client, err := NewRLSClient(context.Background(), ctx)
 	if err != nil {
 		return err
 	}
@@ -96,7 +96,7 @@ var getDeposit = cli.Command{
 }
 
 func cliGetDeposit(ctx *cli.Context) error {
-	client, err := NewRLSClient(context.Background())
+	client, err := NewRLSClient(context.Background(), ctx)
 	if err != nil {
 		return err
 	}
@@ -152,7 +152,7 @@ var listDeposits = cli.Command{
 }
 
 func cliListDeposits(ctx *cli.Context) error {
-	client, err := NewRLSClient(context.Background())
+	client, err := NewRLSClient(context.Background(), ctx)
 	if err != nil {
 		return err
 	}

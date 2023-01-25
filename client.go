@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"time"
 )
 
 const (
@@ -73,13 +72,11 @@ func (rls *RLSClient) Credential() string {
 }
 
 // NewRLSClient creates a new RLSClient
-func NewRLSClient(ctx context.Context, cfg Config) *RLSClient {
+func NewRLSClient(ctx context.Context, cfg Config, httpClient *http.Client) *RLSClient {
 	return &RLSClient{
-		Ctx: ctx,
-		cfg: cfg,
-		HTTPClient: &http.Client{
-			Timeout: time.Minute,
-		},
+		Ctx:        ctx,
+		cfg:        cfg,
+		HTTPClient: httpClient,
 	}
 }
 
