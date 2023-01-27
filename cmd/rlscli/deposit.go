@@ -35,10 +35,11 @@ var newInvoice = cli.Command{
 	Action: cliNewInvoice,
 }
 
-func cliNewInvoice(ctx *cli.Context) error {
+func cliNewInvoice(ctx *cli.Context) {
 	client, err := NewRLSClient(context.Background(), ctx)
 	if err != nil {
-		return err
+		errFailedToCreateRLSClient(err)
+		return
 	}
 
 	args := ctx.Args()
@@ -51,11 +52,13 @@ func cliNewInvoice(ctx *cli.Context) error {
 	} else if args.Present() {
 		amount, err = strconv.ParseInt(args.First(), 10, 64)
 		if err != nil {
-			return fmt.Errorf("invalid amount : %w", err)
+			fmt.Printf("invalid amount: %s\n", err.Error())
+			return
 		}
 		args = args.Tail()
 	} else {
-		return fmt.Errorf("amount in sats (--%s) must be provided", flagAmt)
+		fmt.Printf("amount in sats (--%s) must be provided\n", flagAmt)
+		return
 	}
 
 	if ctx.IsSet(flagLabel) {
@@ -71,10 +74,9 @@ func cliNewInvoice(ctx *cli.Context) error {
 	invoice, err := client.NewInvoice(amount, label, network)
 	if err != nil {
 		fmt.Printf("Error NewInvoice: %s\n", err.Error())
-		return err
+		return
 	}
 	printDepositInvoice(invoice)
-	return nil
 }
 
 var getDeposit = cli.Command{
@@ -95,10 +97,11 @@ var getDeposit = cli.Command{
 	Action: cliGetDeposit,
 }
 
-func cliGetDeposit(ctx *cli.Context) error {
+func cliGetDeposit(ctx *cli.Context) {
 	client, err := NewRLSClient(context.Background(), ctx)
 	if err != nil {
-		return err
+		errFailedToCreateRLSClient(err)
+		return
 	}
 
 	args := ctx.Args()
@@ -110,21 +113,21 @@ func cliGetDeposit(ctx *cli.Context) error {
 	} else if args.Present() {
 		depID = args.First()
 		if depID == "" {
-			return fmt.Errorf("deposit_id must be set")
+			fmt.Printf("deposit_id must be set\n")
+			return
 		}
 	}
 
 	dep, err := client.GetDeposit(depID)
 	if err != nil {
-		fmt.Printf("Error cliGetDeposit: %s\n", err.Error())
-		return err
+		fmt.Printf("Error GetDeposit: %s\n", err.Error())
+		return
 	}
 	if dep == nil {
-		fmt.Printf("deposit not returned")
-		return nil
+		fmt.Printf("Error GetDeposit: deposit not returned\n")
+		return
 	}
 	printDeposit(dep)
-	return nil
 }
 
 var listDeposits = cli.Command{
@@ -151,10 +154,11 @@ var listDeposits = cli.Command{
 	Action: cliListDeposits,
 }
 
-func cliListDeposits(ctx *cli.Context) error {
+func cliListDeposits(ctx *cli.Context) {
 	client, err := NewRLSClient(context.Background(), ctx)
 	if err != nil {
-		return err
+		errFailedToCreateRLSClient(err)
+		return
 	}
 
 	var limit int64 = 25
@@ -168,7 +172,8 @@ func cliListDeposits(ctx *cli.Context) error {
 		limit, err = strconv.ParseInt(args.First(), 10, 64)
 		fmt.Printf("read limit from args: %d", limit)
 		if err != nil {
-			return fmt.Errorf("unable to parse limit as int64 : %w", err)
+			fmt.Printf("unable to parse limit as int64: %s\n", err.Error())
+			return
 		}
 		args = args.Tail()
 	}
@@ -178,14 +183,15 @@ func cliListDeposits(ctx *cli.Context) error {
 	} else if args.Present() {
 		nextTimestamp, err = strconv.ParseInt(args.First(), 10, 64)
 		if err != nil {
-			return fmt.Errorf("unable to parse nextTimestamp as int64 : %w", err)
+			fmt.Printf("unable to parse nextTimestamp as int64: %s\n", err.Error())
+			return
 		}
 	}
 
 	deps, err := client.GetDeposits(limit, nextTimestamp)
 	if err != nil {
-		return fmt.Errorf("failed to list deposits : %w", err)
+		fmt.Printf("failed to list deposits: %s\n", err.Error())
+		return
 	}
 	printDepositList(deps)
-	return nil
 }

@@ -16,17 +16,17 @@ var getAccount = cli.Command{
 	Action: cliGetAccount,
 }
 
-func cliGetAccount(ctx *cli.Context) error {
+func cliGetAccount(ctx *cli.Context) {
 	client, err := NewRLSClient(context.Background(), ctx)
 	if err != nil {
-		return err
+		errFailedToCreateRLSClient(err)
+		return
 	}
 
 	acct, err := client.GetAccount()
 	if err != nil {
-		fmt.Printf("Error cliGetAccount: %s\n", err.Error())
-		return err
+		fmt.Printf("Error GetAccount: %s\n", err.Error())
+		return
 	}
 	printAccount(acct)
-	return nil
 }

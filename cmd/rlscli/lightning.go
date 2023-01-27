@@ -77,10 +77,11 @@ var estimateLightningFee = cli.Command{
 	Action: cliEstimateLightningFee,
 }
 
-func cliEstimateLightningFee(ctx *cli.Context) error {
+func cliEstimateLightningFee(ctx *cli.Context) {
 	client, err := NewRLSClient(context.Background(), ctx)
 	if err != nil {
-		return err
+		errFailedToCreateRLSClient(err)
+		return
 	}
 
 	args := ctx.Args()
@@ -94,7 +95,8 @@ func cliEstimateLightningFee(ctx *cli.Context) error {
 		invoice = args.First()
 		args = args.Tail()
 	} else {
-		return fmt.Errorf("invoice must be set or passed as first argument")
+		fmt.Printf("invoice must be set or passed as first argument")
+		return
 	}
 
 	if ctx.IsSet(flagAmt) {
@@ -102,18 +104,19 @@ func cliEstimateLightningFee(ctx *cli.Context) error {
 	} else if args.Present() {
 		amount, err = strconv.ParseInt(args.First(), 10, 64)
 		if err != nil {
-			return fmt.Errorf("invalid amount : %w", err)
+			fmt.Printf("invalid amount: %s\n", err.Error())
+			return
 		}
 		args = args.Tail()
 	} else {
-		return fmt.Errorf("amount in sats must be provided")
+		fmt.Printf("amount in sats must be provided")
+		return
 	}
 
 	feeEstimate, err := client.EstimateLightningFee(invoice, amount)
 	if err != nil {
 		fmt.Printf("Error ParseInvoice: %s\n", err.Error())
-		return err
+		return
 	}
 	printFeeEstimate(feeEstimate)
-	return nil
 }

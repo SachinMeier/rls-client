@@ -39,7 +39,10 @@ func handleResponse(res *http.Response, response interface{}) error {
 	if response != nil {
 		err := json.NewDecoder(res.Body).Decode(response)
 		if err != nil {
-			msg, err := io.ReadAll(res.Body)
+			msg, msgErr := io.ReadAll(res.Body)
+			if msgErr != nil {
+				err = fmt.Errorf("failed to read response body: %w", err)
+			}
 			return fmt.Errorf("failed to parse response : %s : %w", msg, err)
 		}
 	}

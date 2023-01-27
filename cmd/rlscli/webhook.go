@@ -25,10 +25,11 @@ var newWebhook = cli.Command{
 	Action: cliNewWebhook,
 }
 
-func cliNewWebhook(ctx *cli.Context) error {
+func cliNewWebhook(ctx *cli.Context) {
 	client, err := NewRLSClient(context.Background(), ctx)
 	if err != nil {
-		return err
+		errFailedToCreateRLSClient(err)
+		return
 	}
 
 	args := ctx.Args()
@@ -40,15 +41,15 @@ func cliNewWebhook(ctx *cli.Context) error {
 	} else if args.Present() {
 		url = args.First()
 	} else {
-		return fmt.Errorf("url flag must be set or argument must be passed")
+		fmt.Printf("url flag must be set or argument must be passed\n")
 	}
 
 	webhook, err := client.SubscribeToWebhook(url)
 	if err != nil {
-		return fmt.Errorf("failed to subscribe to webhook : %w", err)
+		fmt.Printf("failed to subscribe to webhook: %s\n", err.Error())
+		return
 	}
 	printWebhook(webhook)
-	return nil
 }
 
 var getWebhook = cli.Command{
@@ -61,18 +62,19 @@ var getWebhook = cli.Command{
 	Action: cliGetWebhook,
 }
 
-func cliGetWebhook(ctx *cli.Context) error {
+func cliGetWebhook(ctx *cli.Context) {
 	client, err := NewRLSClient(context.Background(), ctx)
 	if err != nil {
-		return err
+		errFailedToCreateRLSClient(err)
+		return
 	}
 
 	webhook, err := client.GetSubscribedWebhook()
 	if err != nil {
-		return fmt.Errorf("failed to get webhook : %w", err)
+		fmt.Printf("failed to get webhook: %s\n", err.Error())
+		return
 	}
 	printWebhook(webhook)
-	return nil
 }
 
 var rmWebhook = cli.Command{
@@ -98,10 +100,11 @@ var rmWebhook = cli.Command{
 	Action: cliDeleteWebhook,
 }
 
-func cliDeleteWebhook(ctx *cli.Context) error {
+func cliDeleteWebhook(ctx *cli.Context) {
 	client, err := NewRLSClient(context.Background(), ctx)
 	if err != nil {
-		return err
+		errFailedToCreateRLSClient(err)
+		return
 	}
 
 	args := ctx.Args()
@@ -113,13 +116,14 @@ func cliDeleteWebhook(ctx *cli.Context) error {
 	} else if args.Present() {
 		url = args.First()
 	} else {
-		return fmt.Errorf("url flag must be set or argument must be passed")
+		fmt.Printf("url flag must be set or argument must be passed\n")
+		return
 	}
 
 	err = client.DeleteWebhook(url)
 	if err != nil {
-		return fmt.Errorf("failed to delete webhook : %w", err)
+		fmt.Printf("failed to delete webhook: %s\n", err.Error())
+		return
 	}
 	fmt.Printf("successfully deleted webhook\n")
-	return nil
 }

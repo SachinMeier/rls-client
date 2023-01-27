@@ -47,10 +47,11 @@ var newWithdrawal = cli.Command{
 	Action: cliNewWithdrawal,
 }
 
-func cliNewWithdrawal(ctx *cli.Context) error {
+func cliNewWithdrawal(ctx *cli.Context) {
 	client, err := NewRLSClient(context.Background(), ctx)
 	if err != nil {
-		return err
+		errFailedToCreateRLSClient(err)
+		return
 	}
 
 	args := ctx.Args()
@@ -64,7 +65,8 @@ func cliNewWithdrawal(ctx *cli.Context) error {
 		invoice = args.First()
 		args = args.Tail()
 	} else {
-		return fmt.Errorf("invoice must be set or passed as first argument")
+		fmt.Printf("invoice must be set or passed as first argument\n")
+		return
 	}
 
 	if ctx.IsSet(flagAmt) {
@@ -72,11 +74,13 @@ func cliNewWithdrawal(ctx *cli.Context) error {
 	} else if args.Present() {
 		amount, err = strconv.ParseInt(args.First(), 10, 64)
 		if err != nil {
-			return fmt.Errorf("invalid amount : %w", err)
+			fmt.Printf("invalid amount: %s\n", err.Error())
+			return
 		}
 		args = args.Tail()
 	} else {
-		return fmt.Errorf("amount in sats must be provided")
+		fmt.Printf("amount in sats must be provided\n")
+		return
 	}
 
 	if ctx.IsSet(flagFeeLimit) {
@@ -84,7 +88,8 @@ func cliNewWithdrawal(ctx *cli.Context) error {
 	} else if args.Present() {
 		feeLimit, err = strconv.ParseInt(args.First(), 10, 64)
 		if err != nil {
-			return fmt.Errorf("invalid fee_limit : %w", err)
+			fmt.Printf("invalid fee_limit: %s\n", err.Error())
+			return
 		}
 		args = args.Tail()
 	} else {
@@ -96,10 +101,9 @@ func cliNewWithdrawal(ctx *cli.Context) error {
 	withdrawal, err := client.NewWithdrawal(wd)
 	if err != nil {
 		fmt.Printf("Error cliInitiateWithdrawal: %s\n", err.Error())
-		return err
+		return
 	}
 	printWithdrawal(withdrawal)
-	return nil
 }
 
 var getWithdrawal = cli.Command{
@@ -120,10 +124,11 @@ var getWithdrawal = cli.Command{
 	Action: cliGetWithdrawal,
 }
 
-func cliGetWithdrawal(ctx *cli.Context) error {
+func cliGetWithdrawal(ctx *cli.Context) {
 	client, err := NewRLSClient(context.Background(), ctx)
 	if err != nil {
-		return err
+		errFailedToCreateRLSClient(err)
+		return
 	}
 
 	var wdID string
@@ -133,15 +138,15 @@ func cliGetWithdrawal(ctx *cli.Context) error {
 	} else {
 		wdID = ctx.Args().First()
 		if wdID == "" {
-			return fmt.Errorf("withdrawal_id must be set")
+			fmt.Printf("withdrawal_id must be set\n")
+			return
 		}
 	}
 
 	wd, err := client.GetWithdrawal(wdID)
 	if err != nil {
 		fmt.Printf("Error cliGetWithdrawal: %s\n", err.Error())
-		return err
+		return
 	}
 	printWithdrawal(wd)
-	return nil
 }

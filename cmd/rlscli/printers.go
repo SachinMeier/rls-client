@@ -78,3 +78,7 @@ func printFeeEstimate(feeEstimate *rls.FeeEstimate) {
 	// fmt.Printf("  Invoice: %s\n", feeEstimate.Invoice)
 	fmt.Printf("---------------\n")
 }
+
+func errFailedToCreateRLSClient(err error) {
+	fmt.Printf("failed to load RLS client: %s\n", err.Error())
+}
