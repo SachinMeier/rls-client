@@ -14,6 +14,7 @@ const (
 	flagInvoice       = "invoice"
 	flagFeeLimit      = "fee_limit"
 	flagWithdrawalID  = "withdrawal_id"
+	flagInvoiceID     = "invoice_id"
 	flagDepositID     = "deposit_id"
 	flagCurrency      = "currency"
 	flagURL           = "url"
@@ -44,6 +45,7 @@ func main() {
 	app.Commands = []cli.Command{
 		getAccount,
 		newInvoice,
+		getInvoice,
 		getDeposit,
 		listDeposits,
 		newWithdrawal,

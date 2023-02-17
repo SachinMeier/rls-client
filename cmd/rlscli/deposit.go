@@ -79,6 +79,57 @@ func cliNewInvoice(ctx *cli.Context) {
 	printDepositInvoice(invoice)
 }
 
+var getInvoice = cli.Command{
+	Name:      "getinvoice",
+	Category:  "Deposits",
+	Usage:     "Queries an invoice based on the invoice_id",
+	ArgsUsage: flagInvoiceID,
+	Flags: []cli.Flag{
+		cli.StringFlag{
+			Name:     flagInvoiceID,
+			Usage:    "Invoice ID to Query.",
+			Required: false,
+		},
+	},
+	Description: `
+	Queries an invoice based on the invoice_id.
+	`,
+	Action: cliGetInvoice,
+}
+
+func cliGetInvoice(ctx *cli.Context) {
+	client, err := NewRLSClient(context.Background(), ctx)
+	if err != nil {
+		errFailedToCreateRLSClient(err)
+		return
+	}
+
+	args := ctx.Args()
+
+	var invID string
+
+	if ctx.IsSet(flagInvoiceID) {
+		invID = ctx.String(flagInvoiceID)
+	} else if args.Present() {
+		invID = args.First()
+		if invID == "" {
+			fmt.Printf("%s must be set\n", flagInvoiceID)
+			return
+		}
+	}
+
+	invoice, err := client.GetInvoice(invID)
+	if err != nil {
+		fmt.Printf("Error GetInvoice: %s\n", err.Error())
+		return
+	}
+	if invoice == nil {
+		fmt.Printf("Error GetInvoice: invoice not returned\n")
+		return
+	}
+	printDepositInvoice(invoice)
+}
+
 var getDeposit = cli.Command{
 	Name:      "getdeposit",
 	Category:  "Deposits",
