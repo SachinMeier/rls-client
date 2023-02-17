@@ -51,7 +51,7 @@ func handleResponse(res *http.Response, response interface{}) error {
 
 // createCredential creates the basic auth credential used to authenticate requests to RLS API
 func createCredential(apiKey string) string {
-	key := fmt.Sprintf("%s:%s", apiKey, apiKey)
+	key := fmt.Sprintf("%s:", apiKey)
 	return b64.StdEncoding.EncodeToString([]byte(key))
 }
 
