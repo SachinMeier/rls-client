@@ -50,6 +50,7 @@ func main() {
 		listDeposits,
 		newWithdrawal,
 		getWithdrawal,
+		listWithdrawals,
 		newWebhook,
 		getWebhook,
 		rmWebhook,

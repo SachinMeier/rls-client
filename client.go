@@ -26,6 +26,8 @@ type Client interface {
 	NewWithdrawal(withdrawal *Withdrawal) (*Withdrawal, error)
 	// GetWithdrawal returns a withdrawal based on the passed withdrawal_id
 	GetWithdrawal(withdrawalID string) (*Withdrawal, error)
+	// ListWithdrawals returns a list of recent withdrawals
+	ListWithdrawals(limit int64, nextTimestamp int64) (*WithdrawalList, error)
 	// NewInvoice creates an invoice to enable deposits to RLS
 	NewInvoice(amount int64, label string, network string) (*Invoice, error)
 	// GetInvoice gets an existing deposit intent from RLS using its ID

@@ -25,6 +25,11 @@ type Withdrawal struct {
 	Timestamp int64            `json:"timestamp,omitempty"`
 }
 
+type WithdrawalList struct {
+	Withdrawals   []Withdrawal `json:"withdrawals"`
+	NextTimestamp int64        `json:"next_timestamp,omitempty"`
+}
+
 // Invoice returns Withdrawal Invoice string
 func (wd *Withdrawal) Invoice() string {
 	return wd.Details.Invoice
@@ -111,4 +116,30 @@ func (rls *RLSClient) GetWithdrawal(withdrawalID string) (*Withdrawal, error) {
 		nil,
 	)
 	return rls.handleWithdrawal(req, err)
+}
+
+func (rls *RLSClient) ListWithdrawals(limit int64, nextTimestamp int64) (*WithdrawalList, error) {
+	req, err := http.NewRequest(
+		http.MethodGet,
+		fmt.Sprintf("%s/accounts/%s/withdrawals",
+			rls.BaseURL(),
+			rls.AccountID(),
+		),
+		nil,
+	)
+
+	// Add query params
+	query := req.URL.Query()
+	query.Add("limit", fmt.Sprint(limit))
+	if nextTimestamp != 0 {
+		query.Add("next_timestamp", fmt.Sprint(nextTimestamp))
+	}
+	req.URL.RawQuery = query.Encode()
+
+	var withdrawals WithdrawalList
+	err = rls.sendRequest(req, &withdrawals)
+	if err != nil {
+		return nil, err
+	}
+	return &withdrawals, nil
 }

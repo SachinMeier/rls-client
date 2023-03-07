@@ -100,7 +100,7 @@ func cliNewWithdrawal(ctx *cli.Context) {
 
 	withdrawal, err := client.NewWithdrawal(wd)
 	if err != nil {
-		fmt.Printf("Error cliInitiateWithdrawal: %s\n", err.Error())
+		fmt.Printf("Error NewWithdrawal: %s\n", err.Error())
 		return
 	}
 	printWithdrawal(withdrawal)
@@ -149,4 +149,70 @@ func cliGetWithdrawal(ctx *cli.Context) {
 		return
 	}
 	printWithdrawal(wd)
+}
+
+var listWithdrawals = cli.Command{
+	Name:      "listwithdrawals",
+	Category:  "Withdrawals",
+	Usage:     "Queries most recent withdrawals",
+	ArgsUsage: flagWithdrawalID,
+	Flags: []cli.Flag{
+		cli.Int64Flag{
+			Name:     flagLimit,
+			Usage:    "Number of results to return per page (1..25)",
+			Required: false,
+			Value:    25,
+		},
+		cli.Int64Flag{
+			Name:     flagNextTimestamp,
+			Usage:    "UNIX timestamp of most recent withdrawal to return",
+			Required: false,
+		},
+	},
+	Description: `
+	Queries most recent withdrawals
+	`,
+	Action: cliListWithdrawals,
+}
+
+func cliListWithdrawals(ctx *cli.Context) {
+	client, err := NewRLSClient(context.Background(), ctx)
+	if err != nil {
+		errFailedToCreateRLSClient(err)
+		return
+	}
+
+	var limit int64 = 25
+	var nextTimestamp int64
+
+	args := ctx.Args()
+
+	if ctx.IsSet(flagLimit) {
+		limit = ctx.Int64(flagLimit)
+	} else if args.Present() {
+		limit, err = strconv.ParseInt(args.First(), 10, 64)
+		fmt.Printf("read limit from args: %d", limit)
+		if err != nil {
+			fmt.Printf("unable to parse limit as int64: %s\n", err.Error())
+			return
+		}
+		args = args.Tail()
+	}
+
+	if ctx.IsSet(flagNextTimestamp) {
+		nextTimestamp = ctx.Int64(flagNextTimestamp)
+	} else if args.Present() {
+		nextTimestamp, err = strconv.ParseInt(args.First(), 10, 64)
+		if err != nil {
+			fmt.Printf("unable to parse nextTimestamp as int64: %s\n", err.Error())
+			return
+		}
+	}
+
+	wds, err := client.ListWithdrawals(limit, nextTimestamp)
+	if err != nil {
+		fmt.Printf("Error cliGetWithdrawal: %s\n", err.Error())
+		return
+	}
+	printWithdrawalList(wds)
 }

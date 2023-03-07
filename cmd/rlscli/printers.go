@@ -33,6 +33,14 @@ func printWithdrawal(wd *rls.Withdrawal) {
 	fmt.Printf("-------------------------------------\n")
 }
 
+func printWithdrawalList(wds *rls.WithdrawalList) {
+	for _, withdrawal := range wds.Withdrawals {
+		printWithdrawal(&withdrawal)
+	}
+	fmt.Printf("Next Timestamp: %d\n", wds.NextTimestamp)
+	fmt.Printf("-------------------------------------\n")
+}
+
 func printDeposit(dep *rls.Deposit) {
 	fmt.Printf("--- Deposit: %s ---\n", dep.ID)
 	fmt.Printf("  Amount:     %d\n", dep.Amount)
