@@ -47,7 +47,6 @@ func cliParseInvoice(ctx *cli.Context) error {
 
 	decodedInvoice, err := client.DecodeInvoice(invoice)
 	if err != nil {
-		fmt.Printf("Error ParseInvoice: %s\n", err.Error())
 		return err
 	}
 	printInvoice(decodedInvoice)
