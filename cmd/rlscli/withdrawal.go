@@ -191,7 +191,6 @@ func cliListWithdrawals(ctx *cli.Context) {
 		limit = ctx.Int64(flagLimit)
 	} else if args.Present() {
 		limit, err = strconv.ParseInt(args.First(), 10, 64)
-		fmt.Printf("read limit from args: %d", limit)
 		if err != nil {
 			fmt.Printf("unable to parse limit as int64: %s\n", err.Error())
 			return
